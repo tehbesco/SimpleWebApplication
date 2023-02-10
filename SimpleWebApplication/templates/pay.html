@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Bunnyhop - Checkout{% endblock %}
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+  <h1 class="display-4">Checkout</h1>
+  <h5>Your Cart <img src="https://icones.pro/wp-content/uploads/2021/05/icone-de-panier-bleu.png" style="width: 20px; height: 20px; margin-left: 10px;"></h5>
+  <table style="border: 1px solid black; border-collapse: collapse;">
+    <td style="padding: 5px;">
+      {% for item in items_list %}
+        <p>{{ item.get_food_name() }} {{ item.get_quantity() }} x ${{ item.get_cost() }} = ${{ item.get_cost() * item.get_quantity() }}</p>
+        <p>Special Request: {{ item.get_remarks() }}</p>
+      {% endfor %}
+    </td>
+  </table>
+    <br>
+    <h5>Delivery Fee: $5</h5>
+    <h4>Total: ${{ total + 5 }}</h4>
+    <h4>Discount: {{ disc }}%</h4>
+    {% if disc == 15 %}
+      <h4>GST: 8%</h4>
+      <h4>Grand Total: ${{'%0.2f'| format(((total+5) * 0.918)|float)}}</h4>
+    {% else %}
+      <h4>GST: 8%</h4>
+      <h4>Grand Total: ${{'%0.2f'| format(((total+5) * 1.08)|float)}}</h4>
+    {% endif %}
+
+  <form method="POST" action="">
+    <div class="form-group" style="width: 15%">
+      {{ render_field(form.name, class="form-control") }}
+    </div>
+      <div class="form-group" style="width: 30%">
+        {{ render_field(form.address, class="form-control") }}
+      </div>
+    <div class="form-group" style="width: 15%">
+        {{ render_field(form.card, class="form-control") }}
+    </div>
+
+    <div class="form-group" style="width: 5%">
+        {{ render_field(form.exp, class="form-control") }}
+    </div>
+    <div class="form-group" style="width: 3%">
+        {{ render_field(form.cvc, class="form-control") }}
+    </div>
+    <br>
+    <input type="submit" value="Confirm" class="btn btn-primary"/>
+    <a href="retrieveCart" class="btn btn-danger">Cancel</a>
+  </form>
+
+{% endblock %}

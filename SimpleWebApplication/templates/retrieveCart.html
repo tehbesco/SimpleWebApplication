@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Bunnyhop - Retrieve Cart{% endblock %}
+
+{% block content %}
+<h1 class="display-4">My Cart</h1>
+<div>
+  {% if count == 0 %}
+  <p>There are no items in your cart. Add some now!</p>
+  {% elif count == 1 %}
+  <p>There is 1 item in your cart.</p>
+  {% else %}
+  <p>There are {{ count }} items in your cart.</p>
+  {% endif %}
+</div>
+<div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Item No.</th>
+        <th>Food name</th>
+        <th>Quantity</th>
+        <th>Special requests</th>
+        <th>Price</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in items_list %}
+     <tr>
+        <td>{{ item.get_item_id() }}</td>
+        <td>{{ item.get_food_name() }}</td>
+        <td>{{ item.get_quantity() }}</td>
+        <td>{{ item.get_remarks() }}</td>
+        <td>${{ item.get_cost() * item.get_quantity() }}</td>
+        <td><a href="/updateCart/{{item.get_item_id()}}" class="btn btn-warning">Update</a></td>
+        <td>
+          <form action="{{url_for('delete_cart', id=item.get_item_id())}}" method="POST">
+            <!-- Button to Open the Modal -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal_{{item.get_item_id()}}">
+              Delete
+            </button>
+
+            <!-- The Modal -->
+            <div class="modal" id="myModal_{{item.get_item_id()}}">
+              <div class="modal-dialog">
+                <div class="modal-content">
+
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h4 class="modal-title">Delete Confirmation</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                    Are you sure you want to remove {{item.get_food_name()}} from your cart?
+                  </div>
+
+                  <!-- Modal footer -->
+                  <div class="modal-footer">
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </td>
+     </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+    {% if count != 0 %}
+        <a href="pay" class="btn btn-primary float-end">Checkout</a>
+    {% endif %}
+</div>
+
+{% endblock %}

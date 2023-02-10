@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Bunnyhop - Find Food{% endblock %}
+
+{% block content %}
+    <h1 class="display-4">Find Food</h1>
+    <form method="POST">
+        <input type="text" name="search" required>
+        <input type="submit" value="Search" class="btn btn-primary"/>
+    </form>
+    <h2>(Page {{ pagination.page }})</h2>
+    <hr>
+    {% for food in pagination.items %}
+        <div>
+            <table>
+                <tr>
+                    <td><img src="{{ food.img }}", style="width: 100px; height: 100px; margin-right: 30px;"></td>
+                    <td><h2>{{ food.name }}</h2>
+                    <p>{{ food.description }}</p>
+                    <h1>${{ food.price }}0</h1></td>
+                </tr>
+
+            </table>
+        </div>
+        <form method="POST">
+            <button type="submit" class="btn btn-primary" value="{{ food.id }}" name="submit-button">Add to cart</button>
+        </form>
+        <hr>
+    {% endfor %}
+{% endblock %}

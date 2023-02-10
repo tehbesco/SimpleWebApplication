@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Bunnyhop - Add To Cart{% endblock %}
+
+{% block content %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+
+:root {
+  --line-border-fill: #3498db;
+  --line-border-empty: #e0e0e0;
+}
+
+
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: inherit;
+}
+
+.container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.progress-container::before {
+  content: "";
+  background: var(--line-border-empty);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 100%;
+  z-index: -1;
+}
+
+.progress-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 30px;
+  max-width: 100%;
+  width: 850px;
+  margin: auto;
+}
+
+.progress {
+  background: var(--line-border-fill);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 10%;
+  z-index: -1;
+  transition: 0.4s ease;
+}
+
+.circle {
+  background: #fff;
+  color: #999;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid var(--line-border-empty);
+  transition: .4s ease;
+}
+
+.circle.active {
+  border-color: var(--line-border-fill);
+}
+
+.btn {
+  background-color: var(--line-border-fill);
+  color: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 30px;
+  margin: 5px;
+  font-size: 14px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:focus {
+  outline: 0;
+}
+
+.btn:disabled {
+  background-color: var(--line-border-empty);
+  cursor: not-allowed;
+}
+    iframe {
+    width: 1000px;
+    height: 500px;
+    margin: 0 auto;
+    background-color: #777;
+    display: block;
+    border-style:none;
+}
+.same{
+  display:inline-block;
+  margin-left: 210px;
+}
+#first{
+margin-left: 375px;}
+</style>
+<script>
+    const progress = document.getElementById("progress");
+const stepCircles = document.querySelectorAll(".circle");
+let currentActive = 1;
+
+update(2);
+
+function update(currentActive) {
+  stepCircles.forEach((circle, i) => {
+    if (i < currentActive) {
+      circle.classList.add("active");
+    } else {
+      circle.classList.remove("active");
+    }
+  });
+
+  const activeCircles = document.querySelectorAll(".active");
+  progress.style.width =
+    ((activeCircles.length - 1) / (stepCircles.length - 1)) * 100 + "%";
+
+
+}
+</script>
+<meta http-equiv="content-security-policy">
+<h1 class="text-center">Thank you for your order!</h1> <br>
+<div class="container">
+  <div class="progress-container">
+    <div class="progress" id="progress"> </div>
+    <div class="circle active">1</div>
+    <div class="circle">2</div>
+    <div class="circle">3</div>
+
+  </div>
+</div>
+<div>
+    <p class="same" id="first">Your order has been <br> received by the kitchen!</p>
+    <p class="same">Your order has not been <br> picked up by our driver yet</p>
+    <p class="same">Your order has not <br> reached your address</p>
+</div>
+<br>
+
+<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d8562.466554646644!2d103.84978599540442!3d1.3793965228027412!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2ssg!4v1674623492870!5m2!1sen!2ssg" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<div style="text-align:center">
+  <a href="/" class="btn btn-primary btn-lg" style="margin-top: 40px; padding-left: 20px">Back to home</a>
+</div>
+{% endblock %}

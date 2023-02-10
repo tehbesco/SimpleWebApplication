@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Bunnyhop - Home{% endblock %}
+
+{% block content %}
+<div class="container col-xxl-8 py-5">
+	<div class="row flex-lg-row-reverse align-items-center g-5">
+		<div class="col-10 col-sm-8 col-lg-6">
+			<img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" class="d-block mx-lg-auto img-fluid" alt="" loading="lazy">
+		</div>
+		<div class="col-lg-6">
+			<div class="lc-block mb-3">
+				<div editable="rich">
+					<h2 class="fw-bold display-5">BunnyHop, faster food.</h2>
+				</div>
+			</div>
+
+			<div class="lc-block mb-3">
+				<div editable="rich">
+					<p class="lead">Hits harder than the jumping double from cold
+					</p>
+				</div>
+			</div>
+
+			<div class="lc-block d-grid gap-2 d-md-flex justify-content-md-start"><a class="btn btn-primary px-4 me-md-2" href="foodSearch" role="button">View our restaurants</a>
+				<a class="btn btn-outline-secondary px-4" href="#" role="button">Join Us!</a>
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endblock %}
+

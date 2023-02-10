@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Bunnyhop - Add To Cart{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<h1 class="display-4">Add To Cart</h1>
+<h2>{{ name }}</h2>
+<form method="POST" action="">
+  <div class="form-group" style="width: 3%">
+    {{ render_field(form.quantity, class="form-control") }}
+  </div>
+  <div id="prof">
+    <div class="form-group" style="width: 30%">
+      {{ render_field(form.remarks, class="form-control") }}
+    </div>
+  </div>
+  <br>
+  <input type="submit" value="Submit" class="btn btn-primary"/>
+</form>
+{% endblock %}
+
