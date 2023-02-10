@@ -27,4 +27,3 @@ class PayInfo(Form):
     card = StringField('Credit Card Information',[validators.DataRequired(), validators.Length(min=16, max=19),check_dat])
     exp = StringField("Expiry Date (MM/YY)",[validators.DataRequired(),validators.Length(min=4,max=4),date_chk])
     cvc = StringField("CVC",[validators.DataRequired(),validators.Length(min=3,max=3),check_dat])
-yangyu is a stupid malay mf who deserves the death sentence
