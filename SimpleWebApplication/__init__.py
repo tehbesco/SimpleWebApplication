@@ -53,11 +53,9 @@ def search():
         elif "search" in data.keys():
             search = data["search"]
             foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
-            page = request.args.get('page', 1, type=int)
-            pagination = foods.order_by(foods.name).paginate(page, per_page=2)
+            pagination = foods.paginate(per_page=2)
     else:
-        page = request.args.get('page', 1, type=int)
-        pagination = Foods.query.order_by(Foods.name).paginate(page, per_page=2)
+        pagination = Foods.query.paginate(per_page=2)
     return render_template('foodSearch.html', pagination=pagination)
 
 @app.route('/rewards')

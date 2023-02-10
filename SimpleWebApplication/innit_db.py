@@ -38,6 +38,11 @@ f7 = Foods(img = "https://www.aiyoevent.com.sg/wp-content/uploads/2023/02/roti-p
            price = 13.20,
            description="prata")
 
-db.session.add_all([f1, f2, f3, f4, f5, f6, f7])
+f8 = Foods(img = "https://cdn.discordapp.com/attachments/1068170472946151525/1073648477462081546/IMG_1399.jpg",
+           name = "Benjamin",
+           price = 1.00,
+           description="Slave")
+
+db.session.add_all([f1, f2, f3, f4, f5, f6, f7, f8])
 
 db.session.commit()
