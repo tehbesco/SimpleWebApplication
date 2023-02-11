@@ -1,16 +1,36 @@
 from flask_sqlalchemy import SQLAlchemy
 from Forms import CartItem, PayInfo
 from flask_migrate import Migrate
-from SimpleWebApplication.config import Config
-import shelve, classes
+from classes import Cart
+import shelve, classes, os
 from flask import *
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.app_context().push()
 
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+
+class Foods(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    img = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    tags = db.Column(db.String(100), nullable=False)
+    restaurant = db.Column(db.String(100), nullable=False)
+
+class orderList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date)
+    name = db.Column(db.String(100))
+    num = db.Column(db.Integer)
+    area = db.Column(db.String(100))
+    dri_name = db.Column(db.String(100))
+    remarks = db.Column(db.String(100))
 
 @app.route('/')
 def home():
