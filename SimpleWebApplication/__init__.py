@@ -66,7 +66,7 @@ def search():
     else:
         page = request.args.get('page', 1, type=int)
     foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
-    pagination = foods.paginate(page=page,per_page=2)
+    pagination = foods.paginate(page=page,per_page=5)
     return render_template('foodSearch.html', pagination=pagination)
 
 @app.route('/rewards')
@@ -79,6 +79,7 @@ def create_cart():
     food = Foods.query.get(food_id)
     name = food.name
     price = food.price
+    restaurant = food.restaurant
     cart_item = CartItem(request.form)
     if request.method == 'POST' and cart_item.validate():
         items_dict = {}
@@ -93,7 +94,7 @@ def create_cart():
         db['Items'] = items_dict
         db.close()
         return redirect(url_for('retrieve_cart'))
-    return render_template('createCart.html', form=cart_item, name=name)
+    return render_template('createCart.html', form=cart_item, name=name, res=restaurant, price=price)
 
 
 @app.route('/retrieveCart')
