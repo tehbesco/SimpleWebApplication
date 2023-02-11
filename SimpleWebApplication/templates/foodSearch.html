@@ -4,10 +4,9 @@
 {% block content %}
     <h1 class="display-4">Find Food</h1>
     <form method="POST">
-        <input type="text" name="search" required>
+        <input type="text" name="search">
         <input type="submit" value="Search" class="btn btn-primary"/>
     </form>
-    <h2>(Page {{ pagination.page }})</h2>
     <hr>
     {% for food in pagination.items %}
         <div>
@@ -15,7 +14,8 @@
                 <tr>
                     <td><img src="{{ food.img }}", style="width: 100px; height: 100px; margin-right: 30px;"></td>
                     <td><h2>{{ food.name }}</h2>
-                    <p>{{ food.description }}</p>
+                    <p>{{ food.tags }}</p>
+                    <p>{{ food.restaurant }}</p>
                     <h1>${{ food.price }}0</h1></td>
                 </tr>
 
@@ -56,5 +56,5 @@
             </a>
         </span>
     {% endif %}
-</div>
+    </div>
 {% endblock %}

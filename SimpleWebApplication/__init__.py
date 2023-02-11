@@ -18,8 +18,8 @@ class Foods(db.Model):
     img = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
-    description = db.Column(db.String(100), nullable=False)
-
+    tags = db.Column(db.String(100), nullable=False)
+    restaurant = db.Column(db.String(100), nullable=False)
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -45,6 +45,13 @@ def delete_cookie():
 
 @app.route('/foodSearch', methods=['GET', 'POST'])
 def search():
+    db = shelve.open("search.db", 'r')
+    if "search" in db:
+        search = db["search"]
+    else:
+        db.clear()
+        search = ""
+    db.close()
     if request.method == "POST":
         data = dict(request.form)
         if "submit-button" in data.keys():
@@ -52,10 +59,14 @@ def search():
             return redirect(url_for('create_cart', food_id=id))
         elif "search" in data.keys():
             search = data["search"]
-            foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
-            pagination = foods.paginate(per_page=2)
+            db = shelve.open("search.db",'c')
+            db["search"] = search
+            db.close()
+            page = 1
     else:
-        pagination = Foods.query.paginate(per_page=2)
+        page = request.args.get('page', 1, type=int)
+    foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
+    pagination = foods.paginate(page=page,per_page=2)
     return render_template('foodSearch.html', pagination=pagination)
 
 @app.route('/rewards')
