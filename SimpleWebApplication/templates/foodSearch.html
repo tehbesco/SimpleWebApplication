@@ -3,12 +3,28 @@
 
 {% block content %}
     <h1 class="display-4">Find Food</h1>
+    <h2>Filter by:</h2>
     <form method="POST">
-        <div style="width: 10%">
-            <input type="text" name="search" class="form-control">
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="name">
+          <label class="btn btn-outline-primary" for="btnradio1">Name</label>
+
+          <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="tags">
+          <label class="btn btn-outline-primary" for="btnradio2">Tags</label>
+
+          <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="res">
+          <label class="btn btn-outline-primary" for="btnradio3">Restaurant</label>
         </div>
         <br>
-        <input type="submit" value="Search" class="btn btn-primary"/>
+        <br>
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <input type="text" name="search" class="form-control">
+          </div>
+          <div class="col-auto">
+            <input type="submit" value="Search" class="btn btn-primary"/>
+          </div>
+        </div>
     </form>
     <hr>
     {% for food in pagination.items %}

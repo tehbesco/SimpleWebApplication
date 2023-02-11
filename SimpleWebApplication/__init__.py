@@ -57,12 +57,16 @@ def delete_cookie():
 
 @app.route('/foodSearch', methods=['GET', 'POST'])
 def search():
+    db = shelve.open("search.db", 'c')
+    db.close()
     db = shelve.open("search.db", 'r')
     if "search" in db:
         search = db["search"]
+        src = db["src"]
     else:
         db.clear()
         search = ""
+        src = "name"
     db.close()
     if request.method == "POST":
         data = dict(request.form)
@@ -70,14 +74,21 @@ def search():
             id = data["submit-button"]
             return redirect(url_for('create_cart', food_id=id))
         elif "search" in data.keys():
+            src = data['btnradio']
             search = data["search"]
             db = shelve.open("search.db",'c')
             db["search"] = search
+            db["src"] = src
             db.close()
             page = 1
     else:
         page = request.args.get('page', 1, type=int)
-    foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
+    if src == "res":
+        foods = Foods.query.filter(Foods.restaurant.like('%' + search + '%'))
+    elif src == "tags":
+        foods = Foods.query.filter(Foods.tags.like('%' + search + '%'))
+    else:
+        foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
     pagination = foods.paginate(page=page,per_page=5)
     return render_template('foodSearch.html', pagination=pagination)
 
