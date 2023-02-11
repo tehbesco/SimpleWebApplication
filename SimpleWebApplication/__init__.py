@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from Forms import CartItem, PayInfo
 from flask_migrate import Migrate
-from config import Config
+from SimpleWebApplication.config import Config
 import shelve, classes
 from flask import *
 
