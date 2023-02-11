@@ -1,25 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from Forms import CartItem, PayInfo
-import shelve, Cart, os
+from flask_migrate import Migrate
+from config import Config
+import shelve, classes
 from flask import *
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-        'sqlite:///' + os.path.join(basedir, 'database.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_object(Config)
 app.app_context().push()
-db = SQLAlchemy(app)
 
-class Foods(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    img = db.Column(db.String(100), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    tags = db.Column(db.String(100), nullable=False)
-    restaurant = db.Column(db.String(100), nullable=False)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -89,7 +82,7 @@ def create_cart():
             items_dict = db['Items']
         except:
             print("Error in retrieving Items from cart.db.")
-        cart = Cart.Cart(name, cart_item.quantity.data, cart_item.remarks.data, price)
+        cart = classes.Cart(name, cart_item.quantity.data, cart_item.remarks.data, price)
         items_dict[cart.get_item_id()] = cart
         db['Items'] = items_dict
         db.close()
