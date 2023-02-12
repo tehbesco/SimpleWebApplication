@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Bunnyhop - Subscribe{% endblock %}
 {% block content %}
-<h1 class="display-4">Subscribe</h1>
-<h3>Subscribe to get 15% off on ALL purchases ($15/mo)</h3>
-<br>
+
 {% if request.cookies.get("sub") == "Y" %}
+        <h1 class="display-4 text-center">Subscription</h1>
+        <br>
+        <h3 class="text-center">Your subscription is getting you 15% off on ALL purchases! ($15/mo)</h3>
+        <br>
         <form action="{{url_for('delete_cookie')}}" method="POST">
             <!-- Button to Open the Modal -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
-              Unsubscribe
-            </button>
-
+            <div class="text-center">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
+                  Unsubscribe
+                </button>
+            </div>
             <!-- The Modal -->
             <div class="modal" id="myModal">
               <div class="modal-dialog">
@@ -37,6 +40,11 @@
             </div>
           </form>
 {% else %}
-    <a href="sub" class="btn btn-primary">Subscribe Now!</a>
+<h1 class="display-4 text-center">Subscribe</h1>
+<br>
+<h3 class="text-center">Subscribe to get 15% off on ALL purchases ($15/mo)</h3>
+<br>
+<div class="text-center"><a href="sub" class="btn btn-primary">Subscribe Now!</a></div>
+
 {% endif %}
 {% endblock %}

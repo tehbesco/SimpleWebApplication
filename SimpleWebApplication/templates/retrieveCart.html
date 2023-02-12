@@ -5,7 +5,7 @@
 <h1 class="display-4">My Cart</h1>
 <div>
   {% if count == 0 %}
-  <p>There are no items in your cart. Add some now!</p>
+  <p>There are no items in your cart. <a href="foodSearch">Add some now!</a></p>
   {% elif count == 1 %}
   <p>There is 1 item in your cart.</p>
   {% else %}
@@ -72,8 +72,11 @@
     </tbody>
   </table>
     {% if count != 0 %}
-        <a href="pay" class="btn btn-primary float-end">Checkout</a>
+      <a href="pay" class="btn btn-primary float-end">Checkout</a>
+      <br>
+
     {% endif %}
+    <br>
 </div>
 
 {% endblock %}
