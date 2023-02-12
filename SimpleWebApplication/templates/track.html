@@ -107,12 +107,15 @@
     display: block;
     border-style:none;
 }
-.same{
-  display:inline-block;
-  margin-left: 210px;
+.parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-#first{
-margin-left: 375px;}
+#cent {
+   margin-left: 200px;
+   margin-right: 200px;
+   }
 </style>
 <script>
     const progress = document.getElementById("progress");
@@ -148,15 +151,15 @@ function update(currentActive) {
 
   </div>
 </div>
-<div>
-    <p class="same" id="first">Your order has been <br> received by the kitchen!</p>
-    <p class="same">Your order has not been <br> picked up by our driver yet</p>
-    <p class="same">Your order has not <br> reached your address</p>
+<div class="parent">
+    <p>Your order has been <br> received by the kitchen!</p>
+    <p id="cent">Your order has not been <br> collected by our driver yet</p>
+    <p>Your order has not <br> arrived at your location yet</p>
 </div>
 <br>
 
 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d8562.466554646644!2d103.84978599540442!3d1.3793965228027412!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2ssg!4v1674623492870!5m2!1sen!2ssg" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 <div style="text-align:center">
-  <a href="/" class="btn btn-primary btn-lg" style="margin-top: 40px; padding-left: 20px">Back to home</a>
+  <a href="/" class="btn btn-primary" style="margin-top: 40px; padding-left: 20px">Back to home</a>
 </div>
 {% endblock %}
