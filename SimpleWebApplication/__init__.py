@@ -97,6 +97,11 @@ def home():
 def sub():
     pay_info = PayInfo(request.form)
     if request.method == "POST" and pay_info.validate():
+        data = dict(request.form)
+        db = shelve.open('pay.db', 'w')
+        count = len(db.keys())
+        db[str(count + 1)] = data
+        db.close()
         res = make_response(render_template("resub.html"))
         res.set_cookie("sub", "Y")
         return res
@@ -255,11 +260,10 @@ def pay():
     else:
         discount = 0
     if request.method == 'POST' and pay_info.validate():
-        items_dict = {}
-        db = shelve.open('cart.db', 'w')
-        items_dict = db['Items']
-        items_dict.clear()
-        db['Items'] = items_dict
+        data = dict(request.form)
+        db = shelve.open('pay.db', 'w')
+        count = len(db.keys())
+        db[str(count + 1)] = data
         db.close()
         return redirect(url_for('track'))
     return render_template('pay.html', form=pay_info, items_list=items_list, total=ttl, disc=discount)
