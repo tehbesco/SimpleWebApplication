@@ -5,7 +5,7 @@
 {% if request.cookies.get("sub") == "Y" %}
         <h1 class="display-4 text-center">Subscription</h1>
         <br>
-        <h3 class="text-center">Your subscription is getting you 15% off on ALL purchases! ($15/mo)</h3>
+        <h3 class="text-center">Your subscription is getting you 15% off on ALL purchases with $0 delivery fee!</h3>
         <br>
         <form action="{{url_for('delete_cookie')}}" method="POST">
             <!-- Button to Open the Modal -->
@@ -39,11 +39,37 @@
               </div>
             </div>
           </form>
+            <p class="text-muted text-center">Terms and Conditions apply. Subscription will automatically <br>renew to the standard price after any introductory offer period and you can cancel at any time.
+    <br> This offer is personal to you and only one account can be used for each subscription.</p>
 {% else %}
 <h1 class="display-4 text-center">Subscribe</h1>
 <br>
-<h3 class="text-center">Subscribe to get 15% off on ALL purchases ($15/mo)</h3>
+<h3 class="text-center">Subscribe to get 15% off on ALL purchases and $0 delivery fee!</h3>
 <br>
+<div class="row row-cols-1 row-cols-md-2 g-4">
+  <div class="col">
+    <div class="card text-center" style="width: 18rem; margin-left: 900px;">
+      <img class="card-img-top" src="https://thumbs.dreamstime.com/b/money-jar-vector-illustration-savings-box-coins-isolated-white-background-savings-full-bank-saving-financial-dollar-85657934.jpg" style="width: 200px; height: 200px; margin-left: 45px;" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">15% off</h5>
+        <p class="card-text">Get 15% off on ALL purchases when you subscribe!</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card text-center" style="width: 18rem; margin-left: 50px;">
+        <img class="card-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Delivery-truck.svg/512px-Delivery-truck.svg.png" alt="Card image cap" style="width: 200px; height: 200px; margin-left: 45px;">
+        <div class="card-body">
+            <h5 class="card-title">Free delivery</h5>
+            <p class="card-text">Get free delivery on all purchases over $30!</p>
+        </div>
+    </div>
+  </div>
+</div>
+<br>
+
+<p class="text-muted text-center">Terms and Conditions apply. Subscription will automatically <br>renew to the standard price after any introductory offer period and you can cancel at any time.
+    <br> This offer is personal to you and only one account can be used for each subscription.</p>
 <div class="text-center"><a href="sub" class="btn btn-primary">Subscribe Now!</a></div>
 
 {% endif %}

@@ -13,13 +13,25 @@
     </td>
   </table>
     <br>
-    <h5>Delivery Fee: $5</h5>
-    <h4>Total: ${{ total + 5 }}</h4>
-    <h4>Discount: {{ disc }}%</h4>
     {% if disc == 15 %}
+      {% if total > 30 %}
+        <h5>Delivery Fee: $0</h5>
+        <h4>Total: ${{ total }}</h4>
+      {% else %}
+        <h5>Delivery Fee: $5</h5>
+        <h4>Total: ${{ total + 5 }}</h4>
+      {% endif %}
+      <h4>Discount: {{ disc }}%</h4>
       <h4>GST: 8%</h4>
-      <h4>Grand Total: ${{'%0.2f'| format(((total+5) * 0.918)|float)}}</h4>
+      {% if total > 30 %}
+        <h4>Grand Total: ${{'%0.2f'| format(((total) * 0.918)|float)}}</h4>
+      {% else %}
+        <h4>Grand Total: ${{'%0.2f'| format(((total + 5) * 0.918)|float)}}</h4>
+      {% endif %}
     {% else %}
+      <h5>Delivery Fee: $5</h5>
+      <h4>Total: ${{ total + 5 }}</h4>
+      <h4>Discount: 0%</h4>
       <h4>GST: 8%</h4>
       <h4>Grand Total: ${{'%0.2f'| format(((total+5) * 1.08)|float)}}</h4>
     {% endif %}

@@ -182,7 +182,7 @@ def pay():
     items_list = []
     ttl = 0
     for key in items_dict:
-        ttl += items_dict[key].get_cost()
+        ttl += items_dict[key].get_cost() * items_dict[key].get_quantity()
         item = items_dict.get(key)
         items_list.append(item)
     pay_info = PayInfo(request.form)
