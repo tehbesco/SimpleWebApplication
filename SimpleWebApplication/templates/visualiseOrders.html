@@ -1,0 +1,61 @@
+{% extends "staff_base.html" %}
+{% block title %}BunnyHop - Visualise Orders{% endblock %}
+{% block head %}
+<style>
+    .title {
+        margin: 5px;
+    }
+
+    .content {
+        margin: 5px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .table-a {
+        flex: 20%;
+        padding: 10px;
+        margin: 5px;
+        background-color: #f3f3f3;
+        inline-size: 100%;
+    }
+
+    .bio {
+        padding: 10px;
+        margin: 5px;
+        background-color: #ffffff;
+        color: #004835;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<h1 class="display-4">Statistics</h1>
+<hr>
+<a class="btn btn-primary" href="/dataGraph">Visualisation</a><a class="btn btn-primary" style="margin-left: 10px;" href="/export">Export</a>
+<div>
+    <div class="content">
+        {% for items in table %}
+            <div class="table-a">
+                <p><b>#{{ items.id }}</b></p>
+                <b>
+                    <p class="name">Restaurant: {{ items.name }}; <br> Driver: {{ items.dri_name }}</p>
+                </b>
+                <p>Amount of Items: {{ items.num }}</p>
+                <p>Datetime: {{ items.date }}</p>
+                <p>Area: {{ items.area }}</p>
+                <div class="bio">
+                    <h4>Remarks</h4>
+                    <p>{{ items.remarks }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

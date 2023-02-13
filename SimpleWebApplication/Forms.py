@@ -23,7 +23,8 @@ def date_chk(form, field):
         raise ValidationError('Card has expired')
 
 def chk_alpha(form, field):
-    if not field.data.isalpha():
+    new = field.data.replace(' ', '')  # .isalpha flags whitespaces
+    if not new.isalpha():
         raise ValidationError("Names should not include numbers.")
 
 def chk_date(form, field):

@@ -47,7 +47,6 @@ class Cart:
 
 
 # Order class
-
 class Order:
     count_id = 0
 
@@ -105,9 +104,8 @@ class Order:
     def set_remarks(self, remarks):
         self.__remarks = remarks
 
-# Order class
 
-
+# Driver class
 class Driver(Order):
     count_id = 0
 
