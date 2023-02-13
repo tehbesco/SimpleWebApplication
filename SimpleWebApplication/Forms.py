@@ -56,21 +56,3 @@ class CreateOrderForm(FlaskForm):
     driver_name = StringField("Driver's name",
                               [validators.Length(min=1, max=150), validators.DataRequired(), chk_alpha])
     remarks = TextAreaField('Remarks', [validators.Optional()])
-
-class CreateDriverForm(FlaskForm):
-    class Meta:
-        csrf = False
-
-    driver_name = StringField("Driver's name", [validators.Length(min=1, max=150), validators.DataRequired()])
-    gender = SelectField('Gender', [validators.DataRequired()],
-                         choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')],
-                         default='')
-    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
-    area = StringField('Area', [validators.Length(min=1, max=150), validators.DataRequired()])
-    no_of_items = IntegerField('Number of Items', [validators.DataRequired()])
-    address = StringField('Address', [validators.length(max=200), validators.DataRequired()])
-    vehicle = SelectField('Delivery Vehicle', [validators.DataRequired()],
-                          choices=[('', 'Select'), ('Bicycle', 'Bicycle'), ('PMD', 'Personal Mobility Device'),
-                                   ('On Foot', 'On Foot')],
-                          default='')
-    remarks = TextAreaField('Remarks', [validators.Optional()])

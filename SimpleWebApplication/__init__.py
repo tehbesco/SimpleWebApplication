@@ -174,7 +174,7 @@ def create_cart():
             items_dict = db['Items']
         except:
             print("Error in retrieving Items from cart.db.")
-        cart = classes.Cart(name, cart_item.quantity.data, cart_item.remarks.data, price)
+        cart = Cart(name, cart_item.quantity.data, cart_item.remarks.data, price)
         items_dict[cart.get_item_id()] = cart
         db['Items'] = items_dict
         db.close()
