@@ -9,9 +9,9 @@ import openpyxl
 from datetime import date, datetime
 from collections import Counter
 from math import ceil
-from Forms import CartItem, PayInfo, CreateOrderForm
+from Forms import CartItem, PayInfo, CreateOrderForm, CreateFaqForm
 from classes import *
-import shelve, os
+import shelve, os, Faq
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -466,6 +466,87 @@ def export_data():
 
     return send_file(filename)
 
+
+# <-------------------------------------------------------------------------------------------->
+# <------------------------------ yangyus stuf------------------------------->
+
+@app.route('/faq', methods=['GET', 'POST'])
+def create_faq():
+    create_faq_form = CreateFaqForm(request.form)
+    if request.method == 'POST' and create_faq_form.validate():
+        faqs_dict = {}
+        db = shelve.open('faq.db', 'c')
+
+        try:
+            faqs_dict = db['Faqs']
+        except:
+            print("Error in retrieving Faqs from faq.db")
+
+        faq = Faq.Faq(create_faq_form.email.data, create_faq_form.remarks.data)
+        faqs_dict[faq.get_faq_id()] = faq
+        db['Faqs'] = faqs_dict
+
+        faqs_dict = db['Faqs']
+        faq = faqs_dict[faq.get_faq_id()]
+        print(faq.get_email(), "was stored in faq.db successfully with faq_id ==",
+              faq.get_faq_id())
+
+        db.close()
+
+        return redirect(url_for('home'))
+    return render_template('faq.html', form=create_faq_form)
+
+
+@app.route('/retrievefaq')
+def retrieve_faq():
+    faqs_dict = {}
+    db = shelve.open('faq.db', 'r')
+    faqs_dict = db['Faqs']
+    db.close()
+
+    faqs_list = []
+    for key in faqs_dict:
+        faq = faqs_dict.get(key)
+        faqs_list.append(faq)
+
+    return render_template('retrieveFaq.html', count=len(faqs_list), faqs_list=faqs_list)
+
+
+@app.route('/updateFaq/<int:id>/', methods=['GET', 'POST'])
+def update_faq(id):
+    update_faq_form = CreateFaqForm(request.form)
+    if request.method == 'POST' and update_faq_form.validate():
+        faqs_dict = {}
+        db = shelve.open('faq.db', 'w')
+        faqs_dict = db['Faqs']
+
+        faq = faqs_dict.get(id)
+        faq.set_email(update_faq_form.email.data)
+        faq.set_remarks(update_faq_form.remarks.data)
+
+        db['Faqs'] = faqs_dict
+        db.close()
+        return redirect(url_for('retrieve_faq'))
+    else:
+        faqs_dict = {}
+        db = shelve.open('faq.db', 'r')
+        faqs_dict = db['Faqs']
+        db.close()
+        faq = faqs_dict.get(id)
+        update_faq_form.email.data = faq.get_email()
+        update_faq_form.remarks.data = faq.get_remarks()
+    return render_template('updateFaq.html', form=update_faq_form)
+
+
+@app.route('/deleteFaq/<int:id>', methods=['POST'])
+def delete_faq(id):
+    faqs_dict = {}
+    db = shelve.open('faq.db', 'w')
+    faqs_dict = db['Faqs']
+    faqs_dict.pop(id)
+    db['Faqs'] = faqs_dict
+    db.close()
+    return redirect(url_for('retrieve_faq'))
 
 if __name__ == '__main__':
     app.run()

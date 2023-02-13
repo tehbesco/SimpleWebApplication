@@ -2,6 +2,7 @@ from wtforms import Form, TextAreaField, validators, IntegerField, StringField, 
 from datetime import date, datetime
 from wtforms.validators import ValidationError
 from flask_wtf import FlaskForm
+
 now = str(date.today())
 year = int(now[2:4])
 month = int(now[5:7])
@@ -10,37 +11,46 @@ curr = datetime.now()
 curr_month = curr.month
 curr_year = curr.year
 
+
 def check_dat(form, field):
     for i in range(len(field.data)):
         if (field.data)[i].isalpha():
             raise ValidationError('Field must be integer')
 
+
 def date_chk(form, field):
     for i in range(len(field.data)):
         if (field.data)[i].isalpha():
             raise ValidationError('Field must be integer')
-    if (int(field.data[0:2]) < month and int(field.data[2:]) <= year) or int(field.data[2:]) < year or int(field.data[0:2]) > 12:
+    if (int(field.data[0:2]) < month and int(field.data[2:]) <= year) or int(field.data[2:]) < year or int(
+            field.data[0:2]) > 12:
         raise ValidationError('Card has expired')
+
 
 def chk_alpha(form, field):
     new = field.data.replace(' ', '')  # .isalpha flags whitespaces
     if not new.isalpha():
         raise ValidationError("Names should not include numbers.")
 
+
 def chk_date(form, field):
     if field.data.month > curr_month or field.data.year > curr_year:
         raise ValidationError("Date is pass today's date")
+
 
 class CartItem(Form):
     quantity = IntegerField('Quantity', [validators.DataRequired(), validators.NumberRange(min=1, max=20)])
     remarks = TextAreaField('Special request(s)', [validators.Optional()])
 
+
 class PayInfo(Form):
-    name = StringField('Name',[validators.DataRequired(), validators.Length(min=1, max=30)])
-    address = StringField('Address',[validators.DataRequired(), validators.Length(min=1, max=40)])
-    card = StringField('Credit Card Information',[validators.DataRequired(), validators.Length(min=16, max=19),check_dat])
-    exp = StringField("Expiry Date (MM/YY)",[validators.DataRequired(),validators.Length(min=4,max=4),date_chk])
-    cvc = StringField("CVC",[validators.DataRequired(),validators.Length(min=3,max=3),check_dat])
+    name = StringField('Name', [validators.DataRequired(), validators.Length(min=1, max=30)])
+    address = StringField('Address', [validators.DataRequired(), validators.Length(min=1, max=40)])
+    card = StringField('Credit Card Information',
+                       [validators.DataRequired(), validators.Length(min=16, max=19), check_dat])
+    exp = StringField("Expiry Date (MM/YY)", [validators.DataRequired(), validators.Length(min=4, max=4), date_chk])
+    cvc = StringField("CVC", [validators.DataRequired(), validators.Length(min=3, max=3), check_dat])
+
 
 class CreateOrderForm(FlaskForm):
     class Meta:
@@ -56,3 +66,8 @@ class CreateOrderForm(FlaskForm):
     driver_name = StringField("Driver's name",
                               [validators.Length(min=1, max=150), validators.DataRequired(), chk_alpha])
     remarks = TextAreaField('Remarks', [validators.Optional()])
+
+
+class CreateFaqForm(Form):
+    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+    remarks = TextAreaField('Remarks', [validators.DataRequired()])
