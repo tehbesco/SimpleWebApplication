@@ -50,43 +50,58 @@
  */
 const chat = {
     1: {
-        text: 'Hi! I\'m Yangyubot. The most poggers chatbot uhh I forgor.',
+        text: 'Hi! I\'m Rabbit. BunnyHop\'s awesome chatbot. Can I help you with any issues you need resolved?',
         options: [
             {
-                text: '👋',
+                text: 'How do I order?',
                 next: 2
+            },
+            {
+                text: 'I have a question.',
+                next: 3
+            },
+            {
+                text: 'Issue with my order.',
+                next: 4
             }
         ]
     },
     2: {
-        text: 'I am <em>poggers</em>, not to mention I got hella stacks. Wanna be <del>fwbs?</del> friends?',
-        next: 3
-    },
-    3: {
-        text: 'But you probably knew that anyway.',
+        text: 'You can order from our restaurants tab from the navbar! We deliver from a multitude of partnered restaurants!',
         options: [
             {
-                text: "<strong>Yes</strong>, I did!",
-                next: 4
-            },
+                text: 'Take me there!',
+                url: "/foodSearch"
+            }
+        ]
+    },
+    3: {
+        text: 'We have an FAQ page for commonly asked questions, if you have further issues you can write us a feedback form!',
+        options: [
             {
-                text: "<strong>Nope</strong>, this is news.",
-                next: 5
+                text: "Take me there!",
+                url: "/faq"
             }
         ]
     },
     4: {
-        text: 'Awesome. This chat is still in development.',
+        text: 'Oh. Too bad. 🤪',
+        options: [
+            {
+                text: "Oi.",
+                next: 5
+            }
+            ]
     },
     5: {
-        text: 'Aah, you\'re missing out!',
+        text: 'Kidding only la.',
         next: 6
     },
     6: {
-        text: 'You little bitch',
+        text: 'Visit this link.',
         options: [
             {
-                text: "Kill yourself",
+                text: "Click me",
                 url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
             }
         ]
