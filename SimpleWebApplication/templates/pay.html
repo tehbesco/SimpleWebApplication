@@ -2,60 +2,67 @@
 {% block title %}Bunnyhop - Checkout{% endblock %}
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
-  <h1 class="display-4">Checkout</h1>
-  <h5>Your Cart <img src="https://icones.pro/wp-content/uploads/2021/05/icone-de-panier-bleu.png" style="width: 20px; height: 20px; margin-left: 10px;"></h5>
-  <table style="border: 1px solid black; border-collapse: collapse;">
-    <td style="padding: 5px;">
-      {% for item in items_list %}
-        <p>{{ item.get_food_name() }} {{ item.get_quantity() }} x ${{ item.get_cost() }} = ${{ item.get_cost() * item.get_quantity() }}</p>
-        <p>Special Request: {{ item.get_remarks() }}</p>
-      {% endfor %}
-    </td>
-  </table>
-    <br>
-    {% if disc == 15 %}
-      {% if total > 30 %}
-        <h5>Delivery Fee: $0</h5>
-        <h4>Total: ${{ total }}0</h4>
-      {% else %}
-        <h5>Delivery Fee: $5</h5>
-        <h4>Total: ${{ total + 5 }}0</h4>
-      {% endif %}
-      <h4>Discount: {{ disc }}%</h4>
-      <h4>GST: 8%</h4>
-      {% if total > 30 %}
-        <h4>Grand Total: ${{'%0.2f'| format(((total) * 0.918)|float)}}</h4>
-      {% else %}
-        <h4>Grand Total: ${{'%0.2f'| format(((total + 5) * 0.918)|float)}}</h4>
-      {% endif %}
-    {% else %}
-      <h5>Delivery Fee: $5</h5>
-      <h4>Total: ${{ total + 5 }}</h4>
-      <h4>Discount: 0%</h4>
-      <h4>GST: 8%</h4>
-      <h4>Grand Total: ${{'%0.2f'| format(((total+5) * 1.08)|float)}}</h4>
-    {% endif %}
+  <h1 class="display-2 text-center fw-normal">Checkout</h1>
+<br>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4">
+          <form method="POST" action="">
+            <div class="form-group" style="width: 50%">
+              {{ render_field(form.name, class="form-control") }}
+            </div>
+              <div class="form-group" style="width: 75%">
+                {{ render_field(form.address, class="form-control") }}
+              </div>
+            <div class="form-group" style="width: 50%">
+                {{ render_field(form.card, class="form-control") }}
+            </div>
 
-  <form method="POST" action="">
-    <div class="form-group" style="width: 15%">
-      {{ render_field(form.name, class="form-control") }}
-    </div>
-      <div class="form-group" style="width: 30%">
-        {{ render_field(form.address, class="form-control") }}
+            <div class="form-group" style="width: 20%">
+                {{ render_field(form.exp, class="form-control") }}
+            </div>
+            <div class="form-group" style="width: 15%">
+                {{ render_field(form.cvc, class="form-control") }}
+            </div>
+            <br>
+            <input type="submit" value="Confirm" class="btn btn-primary"/>
+            <a href="retrieveCart" class="btn btn-danger">Cancel</a>
+          </form>
       </div>
-    <div class="form-group" style="width: 15%">
-        {{ render_field(form.card, class="form-control") }}
+      <div class="col-md-4 offset-md-4">
+        <h5>Your Cart <img src="https://icones.pro/wp-content/uploads/2021/05/icone-de-panier-bleu.png" style="width: 20px; height: 20px; margin-left: 10px;"></h5>
+        <table style="border: 1px solid black; border-collapse: collapse;">
+          <td style="padding: 5px;">
+            {% for item in items_list %}
+              <p><span style="color:blue;" class="fw-bolder">{{ item.get_quantity() }}x</span>  &nbsp;{{ item.get_food_name() }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${{ item.get_cost() * item.get_quantity() }}</p>
+              <p>Special Request: {{ item.get_remarks() }}</p>
+            {% endfor %}
+          </td>
+        </table>
+          <br>
+          {% if disc == 15 %}
+            {% if total > 30 %}
+              <h5>Delivery Fee: $0</h5>
+              <h5>Total: ${{ total }}0</h5>
+            {% else %}
+              <h5>Delivery Fee: $5</h5>
+              <h5>Total: ${{ total + 5 }}0</h5>
+            {% endif %}
+            <h5>Discount: {{ disc }}%</h5>
+            <h5>GST: 8%</h5>
+            {% if total > 30 %}
+              <h5>Grand Total: ${{'%0.2f'| format(((total) * 0.918)|float)}}</h5>
+            {% else %}
+              <h5>Grand Total: ${{'%0.2f'| format(((total + 5) * 0.918)|float)}}</h5>
+            {% endif %}
+          {% else %}
+            <h5>Delivery Fee: $5</h5>
+            <h5>Total: ${{ total + 5 }}</h5>
+            <h5>Discount: 0%</h5>
+            <h5>GST: 8%</h5>
+            <h5>Grand Total: ${{'%0.2f'| format(((total+5) * 1.08)|float)}}</h5>
+          {% endif %}
+      </div>
     </div>
-
-    <div class="form-group" style="width: 5%">
-        {{ render_field(form.exp, class="form-control") }}
-    </div>
-    <div class="form-group" style="width: 3%">
-        {{ render_field(form.cvc, class="form-control") }}
-    </div>
-    <br>
-    <input type="submit" value="Confirm" class="btn btn-primary"/>
-    <a href="retrieveCart" class="btn btn-danger">Cancel</a>
-  </form>
-
+  </div>
 {% endblock %}
