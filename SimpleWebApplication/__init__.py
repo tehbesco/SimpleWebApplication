@@ -265,6 +265,12 @@ def pay():
         count = len(db.keys())
         db[str(count + 1)] = data
         db.close()
+        items_dict = {}
+        db = shelve.open('cart.db', 'w')
+        items_dict = db['Items']
+        items_dict.clear()
+        db['Items'] = items_dict
+        db.close()
         return redirect(url_for('track'))
     return render_template('pay.html', form=pay_info, items_list=items_list, total=ttl, disc=discount)
 
