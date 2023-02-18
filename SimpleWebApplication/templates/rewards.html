@@ -3,14 +3,14 @@
 {% block content %}
 
 {% if request.cookies.get("sub") == "Y" %}
-        <h1 class="display-4 text-center">Subscription</h1>
+        <h1 class="display-2 text-center fw-normal">Subscription</h1>
         <br>
         <h3 class="text-center">Your subscription is getting you 15% off on ALL purchases with $0 delivery fee!</h3>
         <br>
         <form action="{{url_for('delete_cookie')}}" method="POST">
             <!-- Button to Open the Modal -->
             <div class="text-center">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
+                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#myModal">
                   Unsubscribe
                 </button>
             </div>
@@ -40,18 +40,19 @@
               </div>
             </div>
           </form>
-            <p class="text-muted text-center">Terms and Conditions apply. Subscription will automatically <br>renew to the standard price after any introductory offer period and you can cancel at any time.
+            <p class="text-muted text-center">Terms and Conditions apply. Subscription will automatically renew to <br>the standard price after any introductory offer period and you can cancel at any time.
     <br> This offer is personal to you and only one account can be used for each subscription.</p>
 {% else %}
-<h1 class="display-4 text-center">Subscribe</h1>
+<h1 class="display-2 text-center fw-normal">Subscribe</h1>
+<br>
 <br>
 <h3 class="text-center">Subscribe to get 15% off on ALL purchases and $0 delivery fee! ($50/mo)</h3>
 <br>
-
+<br>
 <div class="row row-cols-1 row-cols-md-2 g-4">
 
   <div class="col">
-    <div class="card text-center" style="width: 18rem; margin-left: 590px;">
+    <div class="card text-center" style="width: 18rem; margin-left: 900px;">
       <img class="card-img-top" src="https://thumbs.dreamstime.com/b/money-jar-vector-illustration-savings-box-coins-isolated-white-background-savings-full-bank-saving-financial-dollar-85657934.jpg" style="width: 200px; height: 200px; margin-left: 45px;" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">15% off</h5>
@@ -71,9 +72,13 @@
   </div>
 </div>
 <br>
+<br>
 <div class="text-center"><a href="sub" class="btn btn-primary">Subscribe Now!</a></div>
-<p class="text-muted text-center">Terms and Conditions apply. Subscription will automatically <br>renew to the standard price after any introductory offer period and you can cancel at any time.
+<br>
+<p class="text-muted text-center">Terms and Conditions apply. Subscription will automatically renew to <br>the standard price after any introductory offer period and you can cancel at any time.
     <br> This offer is personal to you and only one account can be used for each subscription.</p>
 
 {% endif %}
+<br>
+<br>
 {% endblock %}

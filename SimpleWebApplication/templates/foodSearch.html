@@ -1,9 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Bunnyhop - Find Food{% endblock %}
-
 {% block content %}
-    <h1 class="display-4">Find Food</h1>
-    <h2>Filter by:</h2>
+<style>
+  .content {
+            margin: 5px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+  .food {
+            flex: 17%;
+            padding: 30px;
+            margin: 15px;
+            border: 1px solid #acacad;
+        }
+</style>
+    <h1 class="display-2 text-center fw-normal">Find Food</h1>
+    <h3 class="display-8">Filter by:</h3>
     <form method="POST">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
           <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="name">
@@ -27,52 +41,50 @@
         </div>
     </form>
     <hr>
-    {% for food in pagination.items %}
-        <div>
-            <table>
-                <tr>
-                    <td><img src="{{ food.img }}", style="width: 100px; height: 100px; margin-right: 30px;"></td>
-                    <td><h2>{{ food.name }}</h2>
-                    <p>{{ food.tags }}</p>
-                    <p>{{ food.restaurant }}</p>
-                    <h1>${{ food.price }}0</h1></td>
-                </tr>
-
-            </table>
-        </div>
-        <form method="POST">
-            <button type="submit" class="btn btn-primary" value="{{ food.id }}" name="submit-button">Add to cart</button>
-        </form>
-        <hr>
-    {% endfor %}
-    <div class="pagination">
-        <ul class="pagination">
-        <li class="page-item">
-            {% if pagination.has_prev %}
-                <a class='page-link' href="{{ url_for('search', page=pagination.prev_num) }}">
-                    {{ '<<' }}
-                </a>
-            {% endif %}
-        </li>
-        {% for number in pagination.iter_pages() %}
-                {% if pagination.page != number %}
-                    <li class="page-item">
-                        <a class='page-link'href="{{ url_for('search', page=number) }}">
-                            {{ number }}
-                        </a>
-                    </li>
-                {% else %}
-                    <li class="page-item active"><span class='page-link'>{{ number }}</span></li>
-                {% endif %}
+    <div class="content"</div>
+        {% for food in pagination.items %}
+            <div class="food">
+                <table class="tab">
+                    <tr>
+                        <td><img src="{{ food.img }}", style="width: 150px; height: 150px; margin-right: 30px;"></td>
+                        <td><h2>{{ food.name }}</h2>
+                        <p>{{ food.tags }}</p>
+                        <p class="fs-5">{{ food.restaurant }}</p>
+                        <h1>${{ food.price }}0</h1></td>
+                    </tr>
+                </table>
+                <form method="POST" class="text-end">
+                    <button type="submit" class="btn btn-primary" value="{{ food.id }}" name="submit-button">Add to cart</button>
+                </form>
+            </div>
         {% endfor %}
-        <li class="page-item">
-            {% if pagination.has_next %}
-                    <a class='page-link'
-                        href="{{ url_for('search', page=pagination.next_num) }}">
-                        {{ '>>' }}
-                    </a>
-            {% endif %}
-        </li>
-       </ul>
     </div>
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                {% if pagination.has_prev %}
+                    <a class='page-link' href="{{ url_for('search', page=pagination.prev_num) }}">
+                        {{ '<<' }}
+                    </a>
+                {% endif %}
+            </li>
+            {% for number in pagination.iter_pages() %}
+                    {% if pagination.page != number %}
+                        <li class="page-item">
+                            <a class='page-link'href="{{ url_for('search', page=number) }}">
+                                {{ number }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item active"><span class='page-link'>{{ number }}</span></li>
+                    {% endif %}
+            {% endfor %}
+            <li class="page-item">
+                {% if pagination.has_next %}
+                        <a class='page-link'
+                            href="{{ url_for('search', page=pagination.next_num) }}">
+                            {{ '>>' }}
+                        </a>
+                {% endif %}
+            </li>
+        </ul>
 {% endblock %}

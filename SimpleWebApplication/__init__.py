@@ -154,7 +154,7 @@ def search():
         foods = Foods.query.filter(Foods.tags.like('%' + search + '%'))
     else:
         foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
-    pagination = foods.paginate(page=page, per_page=5)
+    pagination = foods.paginate(page=page, per_page=10)
     return render_template('foodSearch.html', pagination=pagination)
 
 
