@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %} Bunnyhop - Sign up for Customer {% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+
+<style>
+body {
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    background-image: url('https://static.vecteezy.com/system/resources/previews/002/272/094/original/happy-women-Customer-gratuated-from-education-background-concept-free-vector.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;  /*The background-attachment property sets whether a background image scrolls with the rest of the page, or is fixed.*/
+    background-size: cover; /* 	Resize the background image to cover the entire container, even if it has to stretch the image or cut a little bit off one of the edges */
+}
+
+h1 {
+text-align: center;
+}
+form {
+margin: 0 auto;
+width:600px;
+margin: 60px auto 60px auto;   /* horizontal center the element within its container, take up specified width */
+padding: 2em;
+background-color: ghostwhite;
+opacity: 0.95;
+}
+
+
+
+</style>
+<br>
+<h1 class="display-4"> Create Customer </h1>
+<form method="POST" action="">
+    <div class="form-group">
+        {{ render_field(form.first_name, class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.last_name, class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.email, class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.address, class="form-check", style="list-style-type:none") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.phone, class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.password, class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ render_field(form.confirm_password, class="form-control") }}
+    </div>
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+    {% endblock %}
+</form>

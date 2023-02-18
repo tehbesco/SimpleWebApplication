@@ -5,7 +5,7 @@
 {% from "includes/_formHelper.html" import render_field %}
 
 <h1 class="display-4">Add To Cart</h1>
-<h2 class="fw-normal"><span style="color:blue;">${{ price }}0</span> {{ name }} from {{ res }}</h2>
+<h2>${{ price }}0 {{ name }} from {{ res }}</h2>
 <form method="POST" action="">
   <div class="form-group" style="width: 3%">
     {{ render_field(form.quantity, class="form-control") }}

@@ -2,6 +2,8 @@ from wtforms import Form, TextAreaField, validators, IntegerField, StringField, 
 from datetime import date, datetime
 from wtforms.validators import ValidationError
 from flask_wtf import FlaskForm
+from wtforms import Form, StringField, validators, IntegerField
+from wtforms.fields import EmailField, PasswordField
 
 now = str(date.today())
 year = int(now[2:4])
@@ -36,6 +38,26 @@ def chk_alpha(form, field):
 def chk_date(form, field):
     if field.data.month > curr_month or field.data.year > curr_year:
         raise ValidationError("Date is pass today's date")
+
+
+class CreateCustomerForm(Form):
+    first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Customer Email', [validators.Email(), validators.DataRequired()])
+    address = StringField('Address', [validators.Length(min=5, max=150), validators.DataRequired()])
+    phone = IntegerField('Customer Telephone', [validators.Length(min=1, max=8), validators.Optional()])
+    password = PasswordField('Password', [validators.Length(min=8, max=16), validators.DataRequired(), validators.EqualTo('confirm_password', message='Passwords must match')])
+    confirm_password = PasswordField('Confirm Password', [validators.Length(min=8, max=16), validators.DataRequired()])
+
+
+class LoginForm(Form):
+    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+    password = PasswordField('Password', [validators.Length(min=8, max=16), validators.DataRequired()])
+
+
+class ResetRequestForm(Form):
+    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+
 
 
 class CartItem(Form):

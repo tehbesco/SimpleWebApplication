@@ -1,0 +1,4 @@
+Ben
+----
+Customer dashboard now shows all details(previously missing address and phone number)
+Admin/Staff can now login using <Admin@gmail.com> and <test1234> to access user data and manage accounts(previously couldn't login)
