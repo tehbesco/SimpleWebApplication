@@ -1,3 +1,6 @@
+PLEASE INSTALL openpyxl BEFORE RUNNING
+
+
 Ben
 ----
 Customer dashboard now shows all details(previously missing address and phone number)
