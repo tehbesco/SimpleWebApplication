@@ -13,7 +13,7 @@ from flask_bcrypt import Bcrypt
 from flask_wtf import Form
 from flask import Flask, request, redirect, url_for
 from Forms import CreateCustomerForm, LoginForm, ResetRequestForm
-import shelve, User, Customer
+import shelve
 from flask import render_template
 import secrets
 import string
