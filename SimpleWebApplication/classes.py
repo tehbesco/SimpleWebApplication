@@ -104,6 +104,7 @@ class Order:
     def set_remarks(self, remarks):
         self.__remarks = remarks
 
+
 # User class
 class User:
     count_id = 0
@@ -153,6 +154,7 @@ class User:
 
     def set_confirm_password(self, confirm_password):
         self.__confirm_password = confirm_password
+
 
 # Customer class
 class Customer(User):
