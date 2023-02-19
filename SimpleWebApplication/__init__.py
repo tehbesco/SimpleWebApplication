@@ -1,11 +1,23 @@
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.automap import automap_base
-from flask_sqlalchemy import SQLAlchemy
 from flask import *
 import pandas as pd
 import openpyxl
-
+from flask import flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from wtforms import StringField, PasswordField, SubmitField, EmailField, validators, IntegerField
+from wtforms.validators import InputRequired, Length, ValidationError, Email, equal_to
+from flask_bcrypt import Bcrypt
+from flask_wtf import Form
+from flask import Flask, request, redirect, url_for
+from Forms import CreateCustomerForm, LoginForm, ResetRequestForm
+import shelve, User, Customer
+from flask import render_template
+import secrets
+import string
+import smtplib
 from datetime import date, datetime
 from collections import Counter
 from math import ceil
@@ -16,10 +28,18 @@ import shelve, os, Faq
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database_name.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config['UPLOAD_FOLDER'] = 'static/files'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.app_context().push()
+basedata = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 db = SQLAlchemy(app)
 
@@ -154,7 +174,7 @@ def search():
         foods = Foods.query.filter(Foods.tags.like('%' + search + '%'))
     else:
         foods = Foods.query.filter(Foods.name.like('%' + search + '%'))
-    pagination = foods.paginate(page=page, per_page=10)
+    pagination = foods.paginate(page=page, per_page=5)
     return render_template('foodSearch.html', pagination=pagination)
 
 
@@ -264,12 +284,6 @@ def pay():
         db = shelve.open('pay.db', 'w')
         count = len(db.keys())
         db[str(count + 1)] = data
-        db.close()
-        items_dict = {}
-        db = shelve.open('cart.db', 'w')
-        items_dict = db['Items']
-        items_dict.clear()
-        db['Items'] = items_dict
         db.close()
         return redirect(url_for('track'))
     return render_template('pay.html', form=pay_info, items_list=items_list, total=ttl, disc=discount)
@@ -558,5 +572,304 @@ def delete_faq(id):
     db.close()
     return redirect(url_for('retrieve_faq'))
 
+# <-------------------------------------------------------------------------------------------->
+# <------------------------------ Ben's stuff start here -------------------------------------->
+# <-------------------------------------------------------------------------------------------->
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+class User(basedata.Model, UserMixin):
+    id = basedata.Column(basedata.Integer, primary_key=True)
+    email = basedata.Column(basedata.String(20), nullable=False, unique=True)
+    password = basedata.Column(basedata.String(80), nullable=False)
+    type = basedata.Column(basedata.String(1), nullable=False)
+
+    def get_type(self):
+        return self.type
+
+
+class CustomerInfo(basedata.Model):
+    id = basedata.Column(basedata.Integer, primary_key=True)
+    user_id = basedata.Column(basedata.Integer, basedata.ForeignKey('user.id'))
+    first_name = basedata.Column(basedata.String(100))
+    last_name = basedata.Column(basedata.String(100))
+    address = basedata.Column(basedata.String(150))
+    phone = basedata.Column(basedata.Integer)
+
+
+letters = string.ascii_letters
+digits = string.digits
+special_chars = string.punctuation
+
+alphabet = letters + digits + special_chars
+
+pwd_length = 12
+
+pwd = ''
+for i in range(pwd_length):
+    pwd += ''.join(secrets.choice(alphabet))
+
+while True:
+    pwd = ''
+    for i in range(pwd_length):
+        pwd += ''.join(secrets.choice(alphabet))
+
+    if (any(char in special_chars for char in pwd) and
+            sum(char in digits for char in pwd) >= 1):
+        break
+print(pwd)
+
+
+@app.before_first_request
+def create_tables():
+    basedata.create_all()
+    admin = User.query.filter_by(type='A').first()
+    if admin is None:
+        tester = Bcrypt.generate_password_hash("test1234")
+        admin = User(email="Admin@gmail.com", password=tester, type="A")
+        basedata.session.add(admin)
+        basedata.session.commit()
+
+
+@app.route('/reset_request', methods=['GET', 'POST'])
+def reset_request():
+    form = ResetRequestForm(request.form)
+    if request.method == 'POST' and form.validate():
+        user = User.query.filter_by(email=form.email.data).first()
+
+        flash('Reset request sent. Check your mail')
+        user.password = bcrypt.generate_password_hash(pwd)
+        try:
+
+            basedata.session.commit()
+        except:
+            pass
+
+    return render_template('reset_request.html', form=form)
+
+
+class RegisterCustomer(Form):
+    first_name = StringField("Customer's First Name", [validators.Length(min=1, max=150), validators.DataRequired()])
+    last_name = StringField("Customer's Last Name", [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField(validators=[InputRequired(), Email()], render_kw={"placeholder": "Email address"})
+    address = StringField('Mailing Address (For us to send you freebies!)',
+                            [validators.length(max=200), validators.Optional()])
+    phone = IntegerField('Phone Number (Do Not include Country Code)',
+                         [validators.NumberRange(min=80000000, max=99999999), validators.Optional()])
+    password = PasswordField(validators=[InputRequired(), Length(min=8, max=16)], render_kw={"placeholder": "Password"})
+    confirm_password = PasswordField(validators=[InputRequired(), Length(min=8, max=16),
+                                                 equal_to('password', 'Passwords do not match')],
+                                     render_kw={"placeholder": "Re-type Password"})
+
+    def validate_email(self, email):
+        existing_user_email = User.query.filter_by(
+            email=email.data).first()
+        if existing_user_email:
+            raise ValidationError('That email already exists. Please choose a different one.')
+
+
+class LoginForm(Form):
+    email = StringField(validators=[InputRequired(), Email()], render_kw={"placeholder": "Email"})
+    password = PasswordField(validators=[InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+    submit = SubmitField('Login')
+
+
+@app.route('/register_customer', methods=['GET', 'POST'])
+def register():
+    register_customer = RegisterCustomer(request.form)
+
+    if request.method == 'POST' and register_customer.validate():
+        hashed_password = bcrypt.generate_password_hash(register_customer.password.data)
+        new_user = User(email=register_customer.email.data, password=hashed_password, type="S")
+        basedata.session.add(new_user)
+        basedata.session.commit()
+        new_customer_info = CustomerInfo(user_id=new_user.id, first_name=register_customer.first_name.data,
+                                         last_name=register_customer.last_name.data)
+        basedata.session.add(new_customer_info)
+        basedata.session.commit()
+
+        return redirect(url_for('login'))
+
+    return render_template('sign_up_Customer.html', form=register_customer)
+
+
+@app.route('/account_details', methods=['GET', 'POST'])
+def Customer_details():
+    Customerinfo = CustomerInfo.query.all()
+    return render_template('retrieveCustomer.html', Customerinfo=Customerinfo)
+
+
+@app.route('/createCustomer', methods=['GET', 'POST'])
+def create_Customer():
+    create_Customer_form = CreateCustomerForm(request.form)
+    if request.method == 'POST' and create_Customer_form.validate():
+        customers_dict = {}
+        db = shelve.open('Customer.db', 'c')
+        try:
+            customers_dict = db['Customers']
+            User.Customer.count_id = db['Customer_count_id']
+
+        except:
+            print("Error in retrieving Customers from Customer.db.")
+
+        Customer = User(create_Customer_form.first_name.data,
+                        create_Customer_form.last_name.data,
+                        create_Customer_form.email.data,
+                        create_Customer_form.address.data,
+                        create_Customer_form.phone.data,
+                        create_Customer_form.password.data, create_Customer_form.confirm_password.data)
+
+        customers_dict[Customer.get_user_id()] = Customer
+
+        db['Customers'] = customers_dict
+        db['Customer_count_id'] = Customer.Customer.count_id
+
+        db.close()
+        return redirect(url_for('home'))
+
+    return render_template('createCustomer.html', form=create_Customer_form)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    login_form = LoginForm(request.form)
+
+    if request.method == 'POST' and login_form.validate():
+        user = User.query.filter_by(email=login_form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password, login_form.password.data):
+            login_user(user)
+            if user.type == "S":
+                return redirect(url_for('edit_profile'))
+            elif user.type == "A":
+                return redirect(url_for('home'))
+
+        else:
+            flash('Invalid email/password. Please try again.')
+
+    return render_template('login.html', form=login_form)
+
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    Customerprofile = CustomerInfo.query.filter_by(user_id=current_user.id).first()
+    userpw = User.query.filter_by(id=current_user.id).first()
+    id = Customerprofile.id
+    first_name = Customerprofile.first_name
+    last_name = Customerprofile.last_name
+    address = Customerprofile.address
+    phone = Customerprofile.phone
+    hashed_password = userpw.password
+
+    return render_template('edit_profile.html', id=id, first_name=first_name, last_name=last_name,
+                           address=address, phone=phone, password=hashed_password)
+
+
+@app.route('/updateCustomerInfo/<int:id>', methods=['GET', 'POST'])
+@login_required
+def updateCustomerInfo(id):
+    form = RegisterCustomer()
+    name_to_update = CustomerInfo.query.filter_by(user_id=current_user.id).first()
+    name_to_update1 = User.query.filter_by(id=current_user.id).first()
+    if request.method == "POST":
+        name_to_update.first_name = request.form['first_name']
+        name_to_update.last_name = request.form['last_name']
+        name_to_update.address = request.form['address']
+        name_to_update.phone = request.form['phone']
+        name_to_update1.password = request.form['password']
+        try:
+            name_to_update1.password = bcrypt.generate_password_hash(name_to_update1.password)
+            basedata.session.commit()
+            flash("User Updated Successfully!")
+            return render_template('updateCustomerInfo.html',
+                                   form=form,
+                                   name_to_update=name_to_update, name_to_update1=name_to_update1, id=id)
+        except:
+            flash("Error!  Looks like there was a problem...try again!")
+            return render_template('updateCustomerInfo.html',
+                                   form=form,
+                                   name_to_update=name_to_update,
+                                   id=id)
+    else:
+        return render_template('updateCustomerInfo.html',
+                               form=form,
+                               name_to_update=name_to_update,
+                               id=id)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+@app.route('/retrieveCustomers')
+def retrieve_Customers():
+    customers_dict = {}
+    db = shelve.open('Customer.db', 'c')
+    customers_dict = db['Customers']
+    db.close()
+
+    customers_list = []
+    for key in customers_dict:
+        customers = customers_dict.get(key)
+        customers_list.append(customers)
+
+    return render_template('retrieveCustomer.html', count=len(customers_list), Customers_list=customers_list)
+
+
+@app.route('/updateCustomer/<int:id>/', methods=['GET', 'POST'])
+def update_Customer(id):
+    update_customer_form = CreateCustomerForm(request.form)
+    if request.method == 'POST' or update_customer_form.validate():  # 'and' or 'or'
+        customers_dict = {}
+        db = shelve.open('customer.db', 'w')
+        customers_dict = db['customers']
+        customer = customers_dict.get(id)
+        customer.set_first_name(update_customer_form.first_name.data)
+        customer.set_last_name(update_customer_form.last_name.data)
+        customer.set_email(update_customer_form.email.data)
+        customer.set_address(update_customer_form.address.data)
+        customer.set_phone(update_customer_form.phone.data)
+        db['customers'] = customers_dict
+        db.close()
+
+        return redirect(url_for('retrieve_Customers'))
+    else:
+        customers_dict = {}
+        db = shelve.open('Customer.db', 'r')
+        customers_dict = db['Customers']
+        db.close()
+        customer = customers_dict.get(id)
+        update_customer_form.first_name.data = customer.get_first_name()
+        update_customer_form.last_name.data = customer.get_last_name()
+        update_customer_form.email.data = customer.get_email()
+        update_customer_form.address.data = customer.get_address()
+        update_customer_form.phone.data = customer.get_phone()
+
+        return render_template('updateCustomer.html', form=update_customer_form)
+
+
+@app.route('/deleteCustomer/<int:id>', methods=['POST'])
+def delete_Customer(id):
+    customers_dict = {}
+    db = shelve.open('Customer.db', 'w')
+    customers_dict = db['Customers']
+    customers_dict.pop(id)
+    db['Customers'] = customers_dict
+    db.close()
+    return redirect(url_for('retrieve_Customers'))
+
+
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for message in get_flashed_messages() %}
+
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+
+{% endfor %}
+
+<style>
+
+
+
+
+.container {
+	font-size: 18px;
+	}
+
+
+
+</style>
+
+
+<body>
+<h1 class="display-4"> Welcome to the Customer homepage! </h1>
+<h2>Hello there {{ first_name }} {{ last_name }}</h2>
+<a href="{{url_for('logout')}}"  class="btn btn-secondary btn-sm" >Press here to logout</a>
+</body>
+
+<br/>
+
+<div class="card">
+    <div class="card-header">
+        {{ current_user.name }}
+    </div>
+    <div class="card-body">
+
+        <p class="card-text">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-5">
+
+                    <strong>Name:</strong>
+                    {{ first_name }}<br/>
+
+                    <strong> Last name:</strong>
+                    {{ last_name }}<br/>
+
+                    <strong>User Id:</strong>
+                    {{ current_user.id }}<br/>
+
+                    <strong>Email:</strong>
+                    {{ current_user.email }}<br/>
+
+                    <strong> Address:</strong>
+                    {{ address }}<br/>
+
+                    <strong> Phone number:</strong>
+                    {{ phone }}<br/>
+
+
+                </div>
+                <div><a href="{{ url_for('updateCustomerInfo', id=current_user.id)}}" class="btn btn-secondary btn-sm" style="margin-down 20px;">Update Profile</a></div>
+            </div>
+        </div>
+
+
+        {% endblock %}
+    </div>
+</div>
