@@ -13,6 +13,7 @@ from flask_bcrypt import Bcrypt
 from flask_wtf import Form
 from flask import Flask, request, redirect, url_for
 from Forms import CreateCustomerForm, LoginForm, ResetRequestForm
+import shelve, User, Customer
 from flask import render_template
 import secrets
 import string
@@ -22,7 +23,7 @@ from collections import Counter
 from math import ceil
 from Forms import CartItem, PayInfo, CreateOrderForm, CreateFaqForm
 from classes import *
-import shelve, os
+import shelve, os, Faq
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -505,7 +506,7 @@ def create_faq():
         except:
             print("Error in retrieving Faqs from faq.db")
 
-        faq = Faq(create_faq_form.email.data, create_faq_form.remarks.data)
+        faq = Faq.Faq(create_faq_form.email.data, create_faq_form.remarks.data)
         faqs_dict[faq.get_faq_id()] = faq
         db['Faqs'] = faqs_dict
 
@@ -576,7 +577,6 @@ def delete_faq(id):
 # <-------------------------------------------------------------------------------------------->
 
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -629,7 +629,7 @@ def create_tables():
     basedata.create_all()
     admin = User.query.filter_by(type='A').first()
     if admin is None:
-        tester = bcrypt.generate_password_hash("test1234")
+        tester = Bcrypt.generate_password_hash("test1234")
         admin = User(email="Admin@gmail.com", password=tester, type="A")
         basedata.session.add(admin)
         basedata.session.commit()
