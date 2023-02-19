@@ -505,7 +505,7 @@ def create_faq():
         except:
             print("Error in retrieving Faqs from faq.db")
 
-        faq = Faq.Faq(create_faq_form.email.data, create_faq_form.remarks.data)
+        faq = Faq(create_faq_form.email.data, create_faq_form.remarks.data)
         faqs_dict[faq.get_faq_id()] = faq
         db['Faqs'] = faqs_dict
 
