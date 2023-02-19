@@ -575,9 +575,6 @@ def delete_faq(id):
 # <------------------------------ Ben's stuff start here -------------------------------------->
 # <-------------------------------------------------------------------------------------------->
 
-@app.route('/')
-def home():
-    return render_template('home.html')
 
 
 @login_manager.user_loader
@@ -632,7 +629,7 @@ def create_tables():
     basedata.create_all()
     admin = User.query.filter_by(type='A').first()
     if admin is None:
-        tester = Bcrypt.generate_password_hash("test1234")
+        tester = bcrypt.generate_password_hash("test1234")
         admin = User(email="Admin@gmail.com", password=tester, type="A")
         basedata.session.add(admin)
         basedata.session.commit()
