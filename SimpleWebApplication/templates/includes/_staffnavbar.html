@@ -1,34 +1,46 @@
 <nav class="navbar navbar-expand-lg shadow-sm p-3 mb-5 bg-white rounded ">
-  <div class="container-fluid fw-bold">
-    <a href="#"><img src="https://icon-library.com/images/rabbit-icon-png/rabbit-icon-png-29.jpg" style="width: 43px; height: 43px; margin-right: 20px;"></a>
-    <a style="color: #0d6efd;">STAFF</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" style="color: #0d6efd;" href="/staff">Home</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" style="color: #0d6efd;" href="#" role="button" data-bs-toggle="dropdown">Restaurants</a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/createOrder">Create Entries</a></li>
-            <li><a class="dropdown-item" href="/retrieveOrders">Edit Entries</a></li>
-            <li><a class="dropdown-item" href="/visualiseOrders">Statistics</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" style="color: #0d6efd;" href="/retrievefaq">Feedback</a>
-        </li>
-      </ul>
+    <div class="container-fluid fw-bold">
+        <a href="#"><img src="https://icon-library.com/images/rabbit-icon-png/rabbit-icon-png-29.jpg"
+                         style="width: 43px; height: 43px; margin-right: 20px;"></a>
+        <a style="color: #0d6efd;">STAFF</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" style="color: #0d6efd;" href="/staff">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" style="color: #0d6efd;" href="#" role="button"
+                       data-bs-toggle="dropdown">Restaurants</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/createOrder">Create Entries</a></li>
+                        <li><a class="dropdown-item" href="/retrieveOrders">Edit Entries</a></li>
+                        <li><a class="dropdown-item" href="/visualiseOrders">Statistics</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: #0d6efd;" href="/retrievefaq">Feedback</a>
+                </li>
+            </ul>
+        </div>
+        <div class="nav-item dropdown">
+            <a href="#" data-toggle="dropdown" class="nav-item nav-link dropdown-toggle">Manage Customers</a>
+            <div class="dropdown-menu">
+                <a href="/createCustomer" class="dropdown-item">Create Customers</a>
+                <a href="/retrieveCustomers" class="dropdown-item">Retrieve Customers</a>
+            </div>
+        </div>
+        <div>
+            <a class="dropdown-item" href="logout">Click here to Logout</a>
+        </div>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-pills">
+                    <a class="nav-link active" aria-current="page" style="color: white;" href="/">Sign Up/Login</a>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="collapse navbar-collapse justify-content-end">
-      <ul class="navbar-nav">
-        <li class="nav-pills">
-          <a class="nav-link active" aria-current="page" style="color: white;" href="/">Sign Up/Login</a>
-        </li>
-      </ul>
-    </div>
-  </div>
 </nav>
